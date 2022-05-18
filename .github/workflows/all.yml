@@ -171,6 +171,8 @@ jobs:
           qttools5-dev
           ssh
       - uses: actions/checkout@v1.2.0
+      - name: git hackery
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: cmake
         working-directory: bin
         run: cmake ..
@@ -233,6 +235,8 @@ jobs:
           taglib-devel
           tar
       - uses: actions/checkout@v1.2.0
+      - name: git hackery
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: cmake
         working-directory: bin
         run: cmake ..
@@ -303,6 +307,8 @@ jobs:
           taglib-devel
           tar
       - uses: actions/checkout@v1.2.0
+      - name: git hackery
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: cmake
         working-directory: bin
         run: cmake ..
@@ -373,6 +379,8 @@ jobs:
           taglib-devel
           tar
       - uses: actions/checkout@v1.2.0
+      - name: git hackery
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: cmake
         working-directory: bin
         run: cmake ..
@@ -403,6 +411,8 @@ jobs:
       - name: Fix liblastfm includes
         run: ln -s /target/include/lastfm /target/include/lastfm5
       - uses: actions/checkout@v1.2.0
+      - name: git hackery
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: cmake
         working-directory: bin
         run: >
@@ -624,6 +634,8 @@ jobs:
           qttools5-dev
           ssh
       - uses: actions/checkout@v1.2.0
+      - name: git hackery
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: cmake
         working-directory: bin
         run: >
@@ -681,6 +693,8 @@ jobs:
           libsparsehash-dev
           ssh
       - uses: actions/checkout@v1.2.0
+      - name: git hackery
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: cmake
         working-directory: bin
         run: >
@@ -739,6 +753,8 @@ jobs:
           qttools5-dev
           ssh
       - uses: actions/checkout@v1.2.0
+      - name: git hackery
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: cmake
         working-directory: bin
         run: >
@@ -796,6 +812,8 @@ jobs:
           qttools5-dev
           ssh
       - uses: actions/checkout@v1.2.0
+      - name: git hackery
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: cmake
         working-directory: bin
         run: >
@@ -927,6 +945,8 @@ jobs:
           qttools5-dev
           ssh
       - uses: actions/checkout@v1.2.0
+      - name: git hackery
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: cmake
         working-directory: bin
         run: >
@@ -993,6 +1013,8 @@ jobs:
           qttools5-dev
           ssh
       - uses: actions/checkout@v1.2.0
+      - name: git hackery
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: cmake
         working-directory: bin
         run: >
@@ -1014,6 +1036,8 @@ jobs:
     runs-on: macos-10.15
     steps:
       - uses: actions/checkout@v1.2.0
+      - name: git hackery
+        run: git config --global --add safe.directory ${GITHUB_WORKSPACE}
       - name: Install dependencies
         run: brew bundle
 
