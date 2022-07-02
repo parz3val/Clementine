@@ -26,13 +26,11 @@ class ConfigParser(object):
       current_section = None
 
       for line in handle:
-        match = self.SECTION_RE.match(line)
-        if match:
+        if match := self.SECTION_RE.match(line):
           current_section = self._add_section(match.group(1))
           continue
 
-        match = self.VALUE_RE.match(line)
-        if match:
+        if match := self.VALUE_RE.match(line):
           current_section['items'].append(
               (match.group(1), match.group(2).strip()))
           continue
@@ -109,7 +107,7 @@ def main():
 
   for po_filename in glob.glob(PO_GLOB):
     language = os.path.splitext(os.path.basename(po_filename))[0]
-    config_key = 'Name[%s]' % language
+    config_key = f'Name[{language}]'
     po_file = polib.pofile(po_filename)
 
     logging.info('Reading language %s', po_filename)

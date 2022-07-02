@@ -122,12 +122,12 @@ GIO_MODULES_SEARCH_PATH = [
 ]
 
 INSTALL_NAME_TOOL_APPLE = 'install_name_tool'
-INSTALL_NAME_TOOL_CROSS = 'x86_64-apple-darwin-%s' % INSTALL_NAME_TOOL_APPLE
+INSTALL_NAME_TOOL_CROSS = f'x86_64-apple-darwin-{INSTALL_NAME_TOOL_APPLE}'
 INSTALL_NAME_TOOL = INSTALL_NAME_TOOL_CROSS if spawn.find_executable(
     INSTALL_NAME_TOOL_CROSS) else INSTALL_NAME_TOOL_APPLE
 
 OTOOL_APPLE = 'otool'
-OTOOL_CROSS = 'x86_64-apple-darwin-%s' % OTOOL_APPLE
+OTOOL_CROSS = f'x86_64-apple-darwin-{OTOOL_APPLE}'
 OTOOL = OTOOL_CROSS if spawn.find_executable(OTOOL_CROSS) else OTOOL_APPLE
 
 
@@ -164,16 +164,14 @@ class CouldNotParseFrameworkNameError(Error):
 
 
 if len(sys.argv) < 2:
-  print('Usage: %s <bundle.app>' % sys.argv[0])
+  print(f'Usage: {sys.argv[0]} <bundle.app>')
 
 bundle_dir = sys.argv[1]
 
 bundle_name = os.path.basename(bundle_dir).split('.')[0]
 
-commands = []
-
 frameworks_dir = os.path.join(bundle_dir, 'Contents', 'Frameworks')
-commands.append(['mkdir', '-p', frameworks_dir])
+commands = [['mkdir', '-p', frameworks_dir]]
 resources_dir = os.path.join(bundle_dir, 'Contents', 'Resources')
 commands.append(['mkdir', '-p', resources_dir])
 plugins_dir = os.path.join(bundle_dir, 'Contents', 'PlugIns')
@@ -334,13 +332,13 @@ def CopyFramework(src_binary):
   if not m:
     raise CouldNotParseFrameworkNameError(src_binary)
 
-  src_base = m.group(1)
-  name = m.group(2)
-  version = m.group(3)
+  src_base = m[1]
+  name = m[2]
+  version = m[3]
 
   LOGGER.info('Copying framework %s version %s', name, version)
 
-  dest_base = os.path.join(frameworks_dir, '%s.framework' % name)
+  dest_base = os.path.join(frameworks_dir, f'{name}.framework')
   dest_dir = os.path.join(dest_base, 'Versions', version)
   dest_binary = os.path.join(dest_dir, name)
 
@@ -370,9 +368,9 @@ def CopyFramework(src_binary):
 
   # Create symlinks in the Framework to make it look like
   # https://developer.apple.com/library/mac/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/FrameworkAnatomy.html
-  commands.append([
-      'ln', '-sf', 'Versions/Current/%s' % name, os.path.join(dest_base, name)
-  ])
+  commands.append(
+      ['ln', '-sf', f'Versions/Current/{name}',
+       os.path.join(dest_base, name)])
   commands.append([
       'ln', '-sf', 'Versions/Current/Resources',
       os.path.join(dest_base, 'Resources')
@@ -384,7 +382,7 @@ def CopyFramework(src_binary):
 
 
 def FixId(path, library_name):
-  id = '@executable_path/../Frameworks/%s' % library_name
+  id = f'@executable_path/../Frameworks/{library_name}'
   args = [INSTALL_NAME_TOOL, '-id', id, path]
   commands.append(args)
 
@@ -427,7 +425,7 @@ def FixFrameworkInstallPath(library_path, library):
     if re.match(r'\w+\.framework', part):
       full_path = os.path.join(*parts[i:])
       break
-  new_path = '@executable_path/../Frameworks/%s' % full_path
+  new_path = f'@executable_path/../Frameworks/{full_path}'
   FixInstallPath(library_path, library, new_path)
 
 
@@ -442,9 +440,8 @@ def FindXinePlugin(name):
 
 def FindQtPlugin(name):
   for path in QT_PLUGINS_SEARCH_PATH:
-    if os.path.exists(path):
-      if os.path.exists(os.path.join(path, name)):
-        return os.path.join(path, name)
+    if os.path.exists(path) and os.path.exists(os.path.join(path, name)):
+      return os.path.join(path, name)
   raise CouldNotFindQtPluginError(name)
 
 
@@ -484,7 +481,7 @@ def main():
     FixPlugin('clementine-spotifyblob', '.')
     FixPlugin('clementine-tagreader', '.')
   except:
-    print('Failed to find blob: %s' % traceback.format_exc())
+    print(f'Failed to find blob: {traceback.format_exc()}')
 
   for plugin in QT_PLUGINS:
     FixPlugin(FindQtPlugin(plugin), os.path.dirname(plugin))

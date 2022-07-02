@@ -7,9 +7,7 @@ from datetime import *
 
 def pretty_years(s):
 
-	l = list(s)
-	l.sort()
-
+	l = sorted(s)
 	start = None
 	prev = None
 	r = []
@@ -32,7 +30,7 @@ def pretty_years(s):
 		start = x
 		prev = x
 
-	if not prev is None:
+	if prev is not None:
 		if prev == start:
 			r.append("%i" % prev)
 		else:
@@ -42,12 +40,8 @@ def pretty_years(s):
 
 def order_by_year(a, b):
 
-	la = list(a[2])
-	la.sort()
-
-	lb = list(b[2])
-	lb.sort()
-
+	la = sorted(a[2])
+	lb = sorted(b[2])
 	if la[0] < lb[0]:
 		return -1
 	elif la[0] > lb[0]:
@@ -121,35 +115,35 @@ def gen_copyrights(f):
         return copyrights
 
 def change_file(filename):
-        content=[]
-        out=[]
-        extended=0
-        ends=0
-        with open(filename, "r") as fi:
-                content=fi.readlines()
+	content=[]
+	out=[]
+	extended=0
+	ends=0
+	with open(filename, "r") as fi:
+	        content=fi.readlines()
 
-        copyrights=gen_copyrights(filename)
+	copyrights=gen_copyrights(filename)
 
-        if -1 == content[0].find("/* This file is part of Clementine."):
-                print("File {} have no Clementine copyright info".format(filename))
-                return 0
+	if content[0].find("/* This file is part of Clementine.") == -1:
+		print(f"File {filename} have no Clementine copyright info")
+		return 0
 
-        for i in content:
-                if i.find("*/") != -1:
-                        ends = 1
-                if i.find("Copyright ") != -1:
-                        if not extended:
-                                out.extend(copyrights)
-                                extended = 1
+	for i in content:
+	        if i.find("*/") != -1:
+	                ends = 1
+	        if i.find("Copyright ") != -1:
+	                if not extended:
+	                        out.extend(copyrights)
+	                        extended = 1
 
-                        if not ends:
-                                continue
-                else:
-                        out.append(i)
+	                if not ends:
+	                        continue
+	        else:
+	                out.append(i)
 
-        with open(filename+'_tmp', "w") as fi:
-                fi.writelines(out)
-        rename(filename+'_tmp', filename)
+	with open(f'{filename}_tmp', "w") as fi:
+		fi.writelines(out)
+	rename(f'{filename}_tmp', filename)
 
 
 if __name__ == "__main__":
